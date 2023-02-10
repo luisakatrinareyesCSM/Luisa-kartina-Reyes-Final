@@ -1,0 +1,108 @@
+﻿@page
+@model Kat.Pages.Manage.Courses.Index
+
+
+<h3>Course</h3>
+
+<div class="search">
+    <i class="bi bi-search"></i>
+    <input type="text" class="form-control" placeholder="Search" id="search">
+</div>
+
+<div class="row">
+    <div class="col-3">
+        <div class="form-group">
+            <label for="">Sort By</label>
+            <select class="form-control" id="sortBy" asp-for="View.Courses.SortBy">
+                <option value="">choose</option>
+                <option value="tittle">tittle</option>
+                <option value="description">Description</option>
+                <option value="abbrevitation">Abbreviation</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-3">
+        <div class="form-group">
+            <label for="">Sort Order</label>
+            <select class="form-control" id="sortOrder" asp-for="View.Courses.SortOrder">
+                <option value="1">Ascending</option>
+                <option value="2">Descending</option>
+            </select>
+        </div>
+    </div>
+
+</div>
+
+
+
+@{
+    if (Model.View != null && Model.View.Courses != null && Model.View.Courses.Items != null && Model.View.Courses.Items.Count > 0)
+    {
+        <table class="table">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th scope="col">title</th>
+                                        <th scope="col">Description</th>
+                                        <th scope="col">Abbreviation</th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                @{
+                    foreach (var course in Model?.View?.Courses.Items)
+                    {
+                                                        <tr>
+                                                                <th scope="row">@course.Tittle</th>
+                                                                 <td>@course.Description</td>
+                                                                 <td>@course.Abbrevitation</td>
+                                                            
+                                                        </tr>
+                    }            
+                }
+                                </tbody>
+        </table>
+
+        <nav aria-label="Page navigation example">
+                                <ul class="pagination">
+                @{
+                    if (Model?.View?.Courses.PageIndex > 1)
+                    {
+                        <li class="page-item"><a class="page-link" href="/manage/Courses?pageIndex=@(Model?.View?.Courses.PageIndex-1)&pageSize=@(Model?.View?.Courses.PageSize)&sortBy=@(Model?.View?.Courses.SortBy)&sortOrder=@(Model?.View?.Courses.SortOrder)">Previous</a></li>
+                    }
+
+                    <li class="page-item"><span class="page-link">page @Model?.View?.Courses.PageIndex of @Model?.View?.Courses.PageCount (@Model?.View?.Courses.TotalRows total rows)</span></li>
+
+
+                    if (Model?.View?.Courses.PageIndex < Model?.View?.Courses.PageCount)
+                    {
+                        <li class="page-item"><a class="page-link" href="/manage/Courses?pageIndex=@(Model?.View?.Courses.PageIndex+1)&pageSize=@(Model?.View?.Courses.PageSize)&sortBy=@(Model?.View?.Courses.SortBy)&sortOrder=@(Model?.View?.Courses.SortOrder)">Next</a></li>
+                    }
+                }
+                                </ul>
+        </nav>
+    }
+    else
+    {
+        <div>There are no records to show.</div>
+    }
+}
+
+@section Scripts
+    {
+            <script>
+                $("#search").keyup(function (event) {
+                    if (event.keyCode === 13) {
+                window.location = "/manageCourses?keyword=" + $("#search").val();
+                    }
+                });
+
+                $("#sortBy").change(function () {
+            window.location = "/manage/Courses?keyword=@(Model.View.Courses.Keyword)&sortBy=" + $("#sortBy").val() + "&sortOrder=" + $("#sortOrder").val();
+                });
+
+                $("#sortOrder").change(function () {
+            window.location = "/manage/Courses?keyword=@(Model.View.Courses.Keyword)&sortBy=" + $("#sortBy").val() + "&sortOrder=" + $("#sortOrder").val();
+                });
+            </script>
+}

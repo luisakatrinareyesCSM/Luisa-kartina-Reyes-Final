@@ -1,0 +1,113 @@
+﻿@page
+@model Kat.Pages.Manage.Classes.Index
+
+
+<h3>Roles</h3>
+
+<div class="search">
+    <i class="bi bi-search"></i>
+    <input type="text" class="form-control" placeholder="Search" id="search">
+</div>
+
+<div class="row">
+    <div class="col-3">
+        <div class="form-group">
+            <label for="">Sort By</label>
+            <select class="form-control" id="sortBy" asp-for="View.Classes.SortBy">
+                <option value="">choose</option>
+                <option value="year">Year Level</option>
+                <option value="code">Code</option>
+
+            </select>
+        </div>
+    </div>
+    <div class="col-3">
+        <div class="form-group">
+            <label for="">Sort Order</label>
+            <select class="form-control" id="sortOrder" asp-for="View.Classes.SortOrder">
+                <option value="1">Ascending</option>
+                <option value="2">Descending</option>
+            </select>
+        </div>
+    </div>
+
+</div>
+<div class="row">
+    <div class="col-2">
+        <a href="~/manage/classes/create" class="btn btn-primary">Create New</a>
+    </div>
+</div>
+
+
+@{
+    if (Model.View != null && Model.View.Classes != null && Model.View.Classes.Items != null && Model.View.Classes.Items.Count > 0)
+    {
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Code</th>
+                    <th scope="col">Year Level</th>
+                    <th scope="col">Start Date</th>
+                    <th>Type</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    foreach (var clock in Model?.View?.Classes.Items)
+                    {
+                        <tr>
+                            <th scope="row"> @clock.Code</th>
+                            <td>@clock.YearLevel</td>
+                            <td>@clock.StartDate</td>
+                            
+
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                @{
+                    if (Model?.View?.Classes.PageIndex > 1)
+                    {
+                        <li class="page-item"><a class="page-link" href="/manage/Classes?pageIndex=@(Model?.View.Classes.PageIndex-1)&pageSize=@(Model?.View?.Classes.PageSize)&sortBy=@(Model?.View?.Classes.SortBy)&sortOrder=@(Model?.View?.Classes.SortOrder)">Previous</a></li>
+                    }
+
+                    <li class="page-item"><span class="page-link">page @Model?.View?.Classes.PageIndex of @Model?.View?.Classes.PageCount (@Model?.View?.Classes.TotalRows total rows)</span></li>
+
+
+                    if (Model?.View?.Classes.PageIndex < Model?.View?.Classes.PageCount)
+                    {
+                        <li class="page-item"><a class="page-link" href="/manage/Classes?pageIndex=@(Model?.View?.Classes.PageIndex+1)&pageSize=@(Model?.View?.Classes.PageSize)&sortBy=@(Model?.View?.Classes.SortBy)&sortOrder=@(Model?.View?.Classes.SortOrder)">Next</a></li>
+                    }
+                }
+            </ul>
+        </nav>
+    }
+    else
+    {
+        <div>There are no records to show.</div>
+    }
+}
+
+@section Scripts
+    {
+    <script>
+        $("#search").keyup(function (event) {
+            if (event.keyCode === 13) {
+                window.location = "/manage/Classes?keyword=" + $("#search").val();
+            }
+        });
+
+        $("#sortBy").change(function () {
+            window.location = "/manage/Classes?keyword=@(Model.View.Classes.Keyword)&sortBy=" + $("#sortBy").val() + "&sortOrder=" + $("#sortOrder").val();
+        });
+
+        $("#sortOrder").change(function () {
+            window.location = "/manage/Classes?keyword=@(Model.View.Classes.Keyword)&sortBy=" + $("#sortBy").val() + "&sortOrder=" + $("#sortOrder").val();
+        });
+    </script>
+}
